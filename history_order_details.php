@@ -95,10 +95,12 @@ if ($login_check == false) {
                         /* Định dạng dòng lẻ */
                         #example tbody tr:nth-child(odd) {
                             background-color: #fff;
+
                         }
 
                         #example td {
                             padding: 10px;
+                            text-align: center;
                         }
 
                         /* Định dạng hover */

@@ -163,7 +163,13 @@ if (isset($_GET['orderid']) && $_GET['orderid'] == 'order') {
                                 </tr>
 
 
-
+                                <tr>
+                                    <td>Zipcode</td>
+                                    <td> : </td>
+                                    <td>
+                                        <?php echo $result['zipcode'] ?>
+                                    </td>
+                                </tr>
 
                                 <tr>
                                     <td>Mail</td>
