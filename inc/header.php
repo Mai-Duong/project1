@@ -1,169 +1,172 @@
-<!-- index -->
+<!-- admin -->
 <?php
-include('lib/session.php');
-Session::init();
+include '../lib/session.php';
+Session::checkSession();
 ?>
-
-<?php
-// $filepath = realpath(dirname(__FILE__));
-
-include 'lib/database.php';
-include 'helpers/fomat.php';
-
-
-spl_autoload_register(function ($class) {
-	include_once "classes/" . $class . ".php";
-});
-
-
-$db = new Database();
-$fm = new Format();
-$ct = new cart();
-$us = new user();
-$cs = new customer();
-$product = new product();
-$cat = new category();
-
-?>
-
 <?php
 header("Cache-Control: no-cache, must-revalidate");
 header("Pragma: no-cache");
 header("Expires: Sat, 26 Jul 1997 05:00:00 GMT");
 header("Cache-Control: max-age=2592000");
 ?>
-<!DOCTYPE HTML>
+<!DOCTYPE html>
+<html>
 
 <head>
-	<title>Store Website</title>
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-	<link href="css/style.css" rel="stylesheet" type="text/css" media="all" />
-	<link href="css/menu.css" rel="stylesheet" type="text/css" media="all" />
-	<script src="js/jquerymain.js"></script>
-	<script src="js/script.js" type="text/javascript"></script>
-	<script type="text/javascript" src="js/jquery-1.7.2.min.js"></script>
-	<script type="text/javascript" src="js/nav.js"></script>
-	<script type="text/javascript" src="js/move-top.js"></script>
-	<script type="text/javascript" src="js/easing.js"></script>
-	<script type="text/javascript" src="js/nav-hover.js"></script>
-	<link href='http://fonts.googleapis.com/css?family=Monda' rel='stylesheet' type='text/css'>
-	<link href='http://fonts.googleapis.com/css?family=Doppio+One' rel='stylesheet' type='text/css'>
-	<script type="text/javascript">
-		$(document).ready(function ($) {
-			$('#dc_mega-menu-orange').dcMegaMenu({ rowItems: '4', speed: 'fast', effect: 'fade' });
-		});
-	</script>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>Admin</title>
+    <link rel="stylesheet" type="text/css" href="css/reset.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="css/text.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="css/grid.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="css/layout.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="css/nav.css" media="screen" />
+    <link href="css/table/demo_page.css" rel="stylesheet" type="text/css" />
+    <!--  -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha384-+" crossorigin="anonymous">
+
+
+    <!-- Thong ke -->
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.css">
+
+    
+    <!-- BEGIN: load jquery -->
+    <script src="js/jquery-1.6.4.min.js" type="text/javascript"></script>
+    <script type="text/javascript" src="js/jquery-ui/jquery.ui.core.min.js"></script>
+    <script src="js/jquery-ui/jquery.ui.widget.min.js" type="text/javascript"></script>
+    <script src="js/jquery-ui/jquery.ui.accordion.min.js" type="text/javascript"></script>
+    <script src="js/jquery-ui/jquery.effects.core.min.js" type="text/javascript"></script>
+    <script src="js/jquery-ui/jquery.effects.slide.min.js" type="text/javascript"></script>
+    <script src="js/jquery-ui/jquery.ui.mouse.min.js" type="text/javascript"></script>
+    <script src="js/jquery-ui/jquery.ui.sortable.min.js" type="text/javascript"></script>
+    <script src="js/table/jquery.dataTables.min.js" type="text/javascript"></script>
+    <!-- END: load jquery -->
+    <script type="text/javascript" src="js/table/table.js"></script>
+    <script src="js/setup.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            setupLeftMenu();
+            setSidebarHeight();
+        });
+    </script>
+
+    <!-- Thong ke -->
+    <!-- <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script> -->
+    <script src="//cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.min.js"></script>
+
+    <!-- fomat date -->
+    <!-- Example: Include jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- Include jQuery UI library -->
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+
+
 </head>
 
 <body>
-	<div class="wrap">
-		<div class="header_top">
-			<div class="logo">
-				<a href="index.php"><img src="images/logo.png" alt="" /></a>
-				<!-- <p>	WELCOME TO LAPTOP THAI NGUYEN <br> BEST CHOICE</p> -->
-			</div>
-			<div class="header_top_right">
-				<div class="search_box">
-					<form action="search.php" method="post">
-						<input type="text" placeholder="Nhập dữ liệu tìm kiếm....." name="tukhoa">
-						<input type="submit" name="search_product" value="Tìm kiếm">
-					</form>
-				</div>
-				<div class="shopping_cart">
-					<div class="cart">
-						<a href="cart.php" title="View my shopping cart" rel="nofollow">
-							<span class="cart_title">Giỏ hàng</span>
-							<span class="no_product">
-								<?php
-								// $check_cart = $ct->check_cart();
-								// if($check_cart){
-								//$sum = Session::get("sum");
-								// echo $sum . '.' . 'đ';
-								// }else{
-								// 	echo '0'.'đ';
-								// }
-								
-								?>
-							</span>
-						</a>
-					</div>
-				</div>
+    <div class="container_12">
+        <div class="grid_12 header-repeat">
+            <div id="branding">
+                <div class="floatleft logo">
+                    <!-- <img src="C:\xampp\htdocs\website_mvc\images\logog9.png" alt="" /> -->
+                </div>
+                <div class="floatleft middle">
+                    <h1>LAPTOP Thai Nguyen</h1>
+                    <p>GROUP 9</p>
+                </div>
+                <div class="floatright">
+                    <div class="floatleft">
+                        <img src="img/img-profile.jpg" alt="Profile Pic" />
+                    </div>
+                    <div class="floatleft marginleft10">
+                        <ul class="inline-ul floatleft">
+                            <li>Xin chào 
+                                <?php echo Session::get('adminName') ?>
+                            </li>
 
-				<?php
-				if (isset($_GET['customer_id'])) {
-					$delCart = $ct->del_all_data_cart();
-					Session::destroy();
-				}
-				?>
-				<div class="login">
-					<?php
-					$login_check = Session::get('customer_login');
-					if ($login_check == false) {
-						echo ' <a href="login.php">Đăng nhập</a></div>';
-					} else {
-						echo ' <a href="?customer_id=' . Session::get('customer_id') . ' ">Đăng xuất</a></div>';
-					}
-					?>
+                            <?php
+                            if (isset($_GET['action']) && $_GET['action'] == 'logout') {
+                                Session::destroy();
+                            }
+                            ?>
 
-					<div class="clear"></div>
-				</div>
-				<div class="clear"></div>
-				
-			</div>
-			<div class="menu">
-				<ul id="dc_mega-menu-orange" class="dc_mm-orange">
-					<li><a href="index.php">Trang chủ</a></li>
-					<li>
-						<a href="#">Danh mục sản phẩm</a>
-						<ul>
-							<?php
-							$getall_category = $cat->show_category();
-							if ($getall_category) {
-								while ($result_allcat = $getall_category->fetch_assoc()) {
-									?>
-									<li><a href="productbycat.php?catid=<?php echo $result_allcat['catId']; ?>"><?php echo $result_allcat['catName']; ?></a></li>
-									<?php
-								}
-							}
-							?>
-						</ul>
-					</li>
+                            <li><a href="?action=logout">Đăng xuất</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="clear">
+                </div>
+            </div>
+        </div>
+        <div class="clear">
+        </div>
+        <div class="grid_12">
+            <ul class="nav main">
+                <li class="ic-dashboard"><a href="index.php"><span>Thống kê</span></a> </li>
+                <li class="ic-form-style"><a href="taikhoan.php"><span>Tài khoản</span></a></li>
+                <li class="ic-typography"><a href="changepassword.php"><span>Thay đổi mật khẩu</span></a></li>
+                <li class="ic-typography"><a href="contact.php"><span>Quản lý thông tin liên hệ</span></a></li>
 
+                <!-- <li> <input type="text" placeholder="Tìm kiếm...."> </li>
+                <li> <input type="button" value="Tìm kiếm" class="btn success"> </li> -->
+                <!-- <li class="ic-grid-tables"><a href="inbox.php"><span>Inbox</span></a></li> -->
+                <!-- <li class="ic-charts"><a href=""><span>Visit Website</span></a></li> -->
+            </ul>
 
+            <style>
+                /* Định dạng menu chính */
+                ul.nav.main {
+                    list-style: none;
+                    padding: 0;
+                    margin: 0;
+                }
 
+                ul.nav.main li {
+                    display: inline-block;
+                    margin-right: 10px;
+                }
 
-					<!-- <li><a href="topbrands.php">Top Brands</a></li> -->
-					<!-- <li><a href="cart.php">Cart</a></li> -->
-					<?php
-					$check_cart = $ct->check_cart();
-					if ($check_cart == true) {
-						echo '<li><a href="cart.php">Giỏ hàng</a></li>';
-					} else {
-						echo '';
-					}
-					?>
-					<?php
-					$login_check = Session::get('customer_login');
-					if ($login_check == false) {
-						echo '';
-					} else {
+                /* Định dạng các liên kết */
+                ul.nav.main li a {
+                    text-decoration: none;
+                    padding: 5px 10px;
+                    /* background-color: #3498db; */
+                    color: #fff;
+                    border-radius: 5px;
+                    /* transition: background-color 0.3s ease; */
+                }
 
-						echo '<li><a href="profile.php">Tài khoản</a></li>';
-						echo '<li><a href="history_order.php">Lịch sử đơn hàng</a></li>';
-					}
-					?>
-					<?php
-					$customner_id = Session::get('customer_id');
-					$check_ordered = $ct->check_order($customner_id);
-					if ($check_ordered == false) {
-						echo '';
-					} else {
-						// echo '<li><a href="orderdetails.php">Ordered</a></li>';
-					}
-					?>
-					<li><a href="lienhe.php">Thông tin liên hệ</a></li>
-					<!-- <li><a href="contact.php">Contact</a> </li> -->
-					<div class="clear"></div>
-				</ul>
-			</div>
+                /* ul.nav.main li a:hover {
+                    background-color: #2980b9;
+                } */
+
+                /* Định dạng ô tìm kiếm */
+                ul.nav.main li input[type="text"] {
+                    padding: 5px;
+                    border: 1px solid #ccc;
+                    border-radius: 5px;
+                    margin-top: 15px;
+                    margin-left: 300px;
+                }
+
+                ul.nav.main li input[type="button"] {
+                    padding: 5px 10px;
+                    background-color: black;
+                    color: #fff;
+                    border: none;
+                    border-radius: 5px;
+                    cursor: pointer;
+                    margin-top: 12px;
+                    width: 90px;
+                    size: 20px;
+                }
+
+                ul.nav.main li input[type="button"]:hover {
+                    background-color: #219a52;
+                }
+            </style>
+        </div>
+        <div class="clear">
+        </div>
